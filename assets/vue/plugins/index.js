@@ -4,9 +4,9 @@
 // require('../../js/script.js')
 //import store from '../store'
 
-import "../../argon/assets/vendor/nucleo/css/nucleo.css"
-import "../../argon/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css"
-import "../../argon/assets/scss/argon.scss"
+// import "../../argon/assets/vendor/nucleo/css/nucleo.css"
+// import "../../argon/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css"
+// import "../../argon/assets/scss/argon.scss"
 
 
 

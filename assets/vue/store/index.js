@@ -1,9 +1,7 @@
 import { createStore } from 'vuex'
 import userModule from "./user";
 import OtherModule from './other'
-import LeagueModule from './league'
-import ProgrammeModule from './programme'
-import ProjectModule from './project'
+import CalendarModule from './calendar'
 export default createStore({
     state: {
 
@@ -16,8 +14,6 @@ export default createStore({
     modules: {
         user: userModule,
         other: OtherModule,
-        league: LeagueModule,
-        programme: ProgrammeModule,
-        project: ProjectModule
+        calendar: CalendarModule
     }
 })

@@ -1,14 +1,19 @@
+import CalendarApi from "../api/CalendarApi";
+
 export default {
     namespaced: true,
     state:{
-        loading: false,
+        events: [],
     },
     mutations:{
-        setLoading(state,loading){
-            state.loading = loading
+        setEvents(state,events){
+            state.events = events
         }
     },
     actions: {
-
+        async getCalendarAction(context){
+            const res = await CalendarApi.getCalendar()
+            context.commit('setEvents',res.data.data.events)
+        }
     }
 }

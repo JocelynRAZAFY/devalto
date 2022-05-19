@@ -1,18 +1,60 @@
 <?php
 
-namespace App\Services;
+namespace App\Command;
 
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
-class XmlService
+class XmlCommand extends Command
 {
+    protected static $defaultName = 'app:xml';
+    protected static $defaultDescription = 'Add a short description for your command';
 
-    public function __construct()
+    protected function configure(): void
     {
-
+        $this
+            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
+            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
+        ;
     }
 
-    public function parse(string $filemaneXml): array
+    private KernelInterface $kernel;
+    public function __construct(
+        string $name = null,
+        KernelInterface $kernel)
     {
+        $this->kernel = $kernel;
+        parent::__construct($name);
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $io = new SymfonyStyle($input, $output);
+        $res = $this->parse();
+        dump($res);
+//        $arg1 = $input->getArgument('arg1');
+//
+//        if ($arg1) {
+//            $io->note(sprintf('You passed an argument: %s', $arg1));
+//        }
+//
+//        if ($input->getOption('option1')) {
+//            // ...
+//        }
+
+        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+
+        return Command::SUCCESS;
+    }
+
+    private function parse()
+    {
+        $filemaneXml = $this->kernel->getProjectDir().'/public/data/data.xml';
         $xml = simpleXML_load_file($filemaneXml, "SimpleXMLElement", LIBXML_NOCDATA);
         $json = json_encode($xml);
         $arrayView = json_decode($json, TRUE);
@@ -23,7 +65,7 @@ class XmlService
             $month = $this->formatNumber((int)$stationdata['@attributes']['month']);
             $day = $stationdata['@attributes']['day'];
 
-            $date = "{$year}-{$month}-{$day}";
+            $date = "{$year}-{$month}-{$day}"; //$stationdata['@attributes']['year']."-".$this->formatNumber((int)$stationdata['@attributes']['month'])."-".$stationdata['@attributes']['day'];
             $this->tempByDay($date, (int)$stationdata['temp'], $tempDay);
             $this->tempByPeriod($stationdata, $date, (int)$stationdata['temp'], $tempPeriod);
         }
@@ -32,24 +74,8 @@ class XmlService
 
         return [
             "avarageTempDay" => $avarageTempDay,
-            "avarageTempPeriod" => $avarageTempPeriod,
-            "bestDayFestival" => $this->bestDayFestival($avarageTempDay)
+            "avarageTempPeriod" => $avarageTempPeriod
         ];
-    }
-
-    private function bestDayFestival(array $avarageTempDay)
-    {
-        $bestDay = [];
-        foreach ($avarageTempDay as $date => $avarage){
-            foreach ($avarage as $label => $value){
-                //dump($label);
-                //dd($item);
-                if($label == 'min' && $value >= 18){
-                    $bestDay[] = $date;
-                }
-            }
-        }
-        return $bestDay[0];
     }
 
     private function avarageTempByPeriod(array $tempPeriod): array
@@ -73,7 +99,7 @@ class XmlService
                 }
             }
         }
-        return $avarageTempPeriod;
+       return $avarageTempPeriod;
     }
 
     private function avarageTempByDay(array $tempDay)
@@ -119,5 +145,4 @@ class XmlService
         }
         return $res;
     }
-
 }
