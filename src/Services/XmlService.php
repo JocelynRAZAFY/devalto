@@ -5,6 +5,8 @@ namespace App\Services;
 
 class XmlService
 {
+    const DAY_MIN = 9;
+    const DAY_MAX = 19;
 
     public function __construct()
     {
@@ -40,16 +42,39 @@ class XmlService
     private function bestDayFestival(array $avarageTempDay)
     {
         $bestDay = [];
+        $filterDay = [];
+        $maxMin = 0;
+
         foreach ($avarageTempDay as $date => $avarage){
+            $day = (int)explode('-',$date)[2];
+
+            //$bestDay = $date;
             foreach ($avarage as $label => $value){
-                //dump($label);
-                //dd($item);
-                if($label == 'min' && $value >= 18){
-                    $bestDay[] = $date;
+                if($day>=self::DAY_MIN and $day<=self::DAY_MAX){
+                   /* dump($label);
+                    dump($maxMin);
+                    dump($value);*/
+                    if($label == 'min' && $maxMin < $value){
+                      //  dump($value);
+                        $maxMin = $value;
+                       // $bestDay = $date;
+                        $bestDay = [
+                            $date => $avarage
+                        ];
+                    }
+
+
+                    /*if($value >= max($mins)){
+                        dd($value);
+                        $bestDay[] = $date;
+                    }*/
                 }
+                //$mins[] = $value;
             }
         }
-        return $bestDay[0];
+       // dd($bestDay);
+
+        return $bestDay;
     }
 
     private function avarageTempByPeriod(array $tempPeriod): array

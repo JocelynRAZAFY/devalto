@@ -1,4 +1,6 @@
 # https://mdprog.com/
+# https://kaomandy.com/
+# https://devalto.kaomandy.com/
 ## Info perso
 - mail: rt1jocelyn@gmail.com
 - tel: +261 32 97 740 62
