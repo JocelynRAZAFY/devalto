@@ -19,23 +19,20 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {useStore} from "vuex";
+import {computed, ref, watch} from "vue";
 
 export default {
   name: "AveragePeriodDay",
-  data: () => ({
-    tableData: []
-  }),
-  computed:{
-    ...mapState({
-      events: (state) => state.calendar.events
-    })
-  },
-  methods:{
+  setup(){
+    const { state } = useStore()
+    const tableData = ref([])
 
-  },
-  watch:{
-    events(value){
+    // Computed
+    const events = computed(() => state.calendar.events)
+
+    // Watch
+    watch(events, (value) => {
       for(const day in value.avarageTempPeriod){
         const avarage = value.avarageTempPeriod[day]
         let data = {}
@@ -43,8 +40,13 @@ export default {
           data['date'] = day
           data[label] = avarage[label]
         }
-        this.tableData.push(data)
+        tableData.value.push(data)
       }
+    })
+
+    return {
+      events,
+      tableData
     }
   }
 }

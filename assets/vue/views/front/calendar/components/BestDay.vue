@@ -18,29 +18,31 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {useStore} from "vuex";
+import {computed, watch, ref} from "vue";
 
 export default {
   name: "BestDay",
-  data: () => ({
-    tableData: []
-  }),
-  computed:{
-    ...mapState({
-      events: (state) => state.calendar.events
-    })
-  },
-  methods:{
+  setup(){
+    const {state} = useStore()
+    const tableData = ref([])
 
-  },
-  watch:{
-    events(value){
+    //Computed
+    const events = computed(() => state.calendar.events)
+
+    // Watch
+    watch(events, (value) => {
       for (const date in value.bestDayFestival){
         const com = "C'est le meilleur jour pour assister à un spectacle\n" +
             "musical extérieur en soirée durant le festival d’été qui s’est déroulé du 9 au 19 juillet\n" +
             "2015. Car la valeur MAXIMAL parmi les valeurs de températures minimales est : "+value.bestDayFestival[date].min
-        this.tableData.push({date: date, com: com})
+        tableData.value.push({date: date, com: com})
       }
+    })
+
+    return {
+      tableData,
+      events
     }
   }
 }

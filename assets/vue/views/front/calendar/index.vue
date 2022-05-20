@@ -15,7 +15,8 @@
 import Calendar from "./components/Calendar";
 import BestDay from "./components/BestDay";
 import AveragePeriodDay from "./components/AveragePeriodDay";
-import {mapActions} from "vuex";
+import {useStore} from "vuex";
+
 export default {
   name: "index",
   components :{
@@ -23,11 +24,9 @@ export default {
     BestDay,
     Calendar
   },
-  async created() {
-    await this.getCalendarAction()
-  },
-  methods: {
-    ...mapActions('calendar', ['getCalendarAction'])
+  setup(){
+    const store = useStore()
+    store.dispatch('calendar/getCalendarAction')
   }
 }
 </script>
